@@ -5,26 +5,53 @@
  */
 
 /* You can override the default Infima variables here. */
+/*:root {*/
+/*  --ifm-color-primary: #2e8555;*/
+/*  --ifm-color-primary-dark: #29784c;*/
+/*  --ifm-color-primary-darker: #277148;*/
+/*  --ifm-color-primary-darkest: #205d3b;*/
+/*  --ifm-color-primary-light: #33925d;*/
+/*  --ifm-color-primary-lighter: #359962;*/
+/*  --ifm-color-primary-lightest: #3cad6e;*/
+/*  --ifm-code-font-size: 95%;*/
+/*  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);*/
+/*}*/
+
+/*!* For readability concerns, you should choose a lighter palette in dark mode. *!*/
+/*[data-theme='dark'] {*/
+/*  --ifm-color-primary: #25c2a0;*/
+/*  --ifm-color-primary-dark: #21af90;*/
+/*  --ifm-color-primary-darker: #1fa588;*/
+/*  --ifm-color-primary-darkest: #1a8870;*/
+/*  --ifm-color-primary-light: #29d5b0;*/
+/*  --ifm-color-primary-lighter: #32d8b4;*/
+/*  --ifm-color-primary-lightest: #4fddbf;*/
+/*  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);*/
+/*}*/
+
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #5E6AD2;
+  --ifm-color-primary-dark: #4F5ABF;
+  --ifm-color-primary-darker: #3F4AAD;
+  --ifm-color-primary-darkest: #2F3A9A;
+  --ifm-color-primary-light: #6E7AE5;
+  --ifm-color-primary-lighter: #7E8AF8;
+  --ifm-color-primary-lightest: #8E9AFF;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-background-color: #1B1B1D;
+  --ifm-background-surface-color: #2D2D30;
+
+  --ifm-color-secondary: #ebedf0;
+  --ifm-color-secondary-dark: #d4d5d8;
+  --ifm-color-secondary-darker: #bdbfc5;
+  --ifm-color-secondary-darkest: #9fa2ab;
+  --ifm-color-secondary-light: #f2f3f5;
+  --ifm-color-secondary-lighter: #f9f9fa;
+  --ifm-color-secondary-lightest: #ffffff;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+/* For readability concerns, you should choose a lighter palette in light mode */
+html[data-theme='light'] {
+  --ifm-background-color: #ffffff;
+  --ifm-background-surface-color: #f0f0f0;
 }

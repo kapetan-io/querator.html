@@ -10,32 +10,32 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: 'Reservation Pattern',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+          Uses the reservation pattern to ensure messages are delivered and processed by the consumer.
+          Built with well known HTTP, Protobuf, JSON Protocols makes adoption easy.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Simply Scalable',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+          Automatically balanced partitions means scale without the need for a
+          complex protocol or clients. Server handles all the complexity of assigning consumers to partitions.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Database-Backed',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+          Disaggregated data layer provides operators with the flexibility to select the desired level of fault
+          tolerance and use of a data store with which they are familiar.
       </>
     ),
   },

@@ -8,16 +8,38 @@
   text-align: center;
   position: relative;
   overflow: hidden;
-}
-
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+  background: linear-gradient(135deg, #2D2D30 0%, #3A3A3D 100%);
 }
 
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.quickStart {
+  background-color: var(--ifm-color-primary-dark);
+  padding: 2rem;
+  margin: 2rem 0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.useCases {
+  padding: 2rem;
+  margin: 2rem 0;
+  border-radius: 8px;
+}
+
+.updates {
+  margin: 2rem 0;
+}
+
+.updates ul {
+  list-style: none;
+  padding: 0;
+}
+
+.updates li {
+  margin-bottom: 0.5rem;
 }
