@@ -48,10 +48,25 @@
   --ifm-color-secondary-light: #f2f3f5;
   --ifm-color-secondary-lighter: #f9f9fa;
   --ifm-color-secondary-lightest: #ffffff;
+
+  --ifm-hero-text-color: var(--ifm-color-secondary-dark)
 }
 
 /* For readability concerns, you should choose a lighter palette in light mode */
 html[data-theme='light'] {
   --ifm-background-color: #ffffff;
   --ifm-background-surface-color: #f0f0f0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--ifm-color-secondary-dark);
+  font-family: var(--ifm-heading-font-family);
+  font-weight: var(--ifm-heading-font-weight);
+  line-height: var(--ifm-heading-line-height);
+  margin: var(--ifm-heading-margin-top) 0 var(--ifm-heading-margin-bottom) 0;
 }

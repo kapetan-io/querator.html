@@ -1,6 +1,7 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import type * as Redocusaurus from 'redocusaurus';
 
 const config: Config = {
   title: 'Querator.io',
@@ -38,7 +39,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/kapetan-io/querator.html/tree/main/',
         },
         blog: {
           showReadingTime: true,
@@ -60,6 +61,31 @@ const config: Config = {
         },
       } satisfies Preset.Options,
     ],
+    // Redocusaurus config
+    [
+      'redocusaurus',
+      {
+        // Plugin Options for loading OpenAPI files
+        specs: [
+          // Pass it a path to a local OpenAPI YAML file
+          {
+            // Redocusaurus will automatically bundle your spec into a single file during the build
+            spec: 'openapi.yaml',
+            route: '/api/',
+          },
+          // You can also pass it a OpenAPI spec URL
+          {
+            spec: 'https://redocly.github.io/redoc/openapi.yaml',
+            route: '/openapi/',
+          },
+        ],
+        // Theme Options for modifying how redoc renders them
+        theme: {
+          // Change with your site colors
+          primaryColor: '#1890ff',
+        },
+      },
+    ] satisfies Redocusaurus.PresetEntry,
   ],
 
   themeConfig: {
@@ -83,9 +109,10 @@ const config: Config = {
           position: 'left',
           label: 'Documentation',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        {to: '/api', label: 'API Reference', position: 'left'},
+        // {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/kapetan.io/querator',
+          href: 'https://github.com/kapetan-io/querator',
           label: 'GitHub',
           position: 'right',
         },
