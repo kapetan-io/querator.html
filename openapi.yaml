@@ -70,8 +70,8 @@ paths:
         other consumer will be provided the same items unless the
         `lease_deadline` has expired 
 
-        and the consumer with the reservation has not marked the items via 
-        `/queue.complete` or `/queue.defer`
+        and the consumer with the lease has not marked the items via 
+        `/queue.complete` or `/queue.retry`
 
 
         If a items is not acknowledge via `/queue.complete` within the
@@ -80,7 +80,7 @@ paths:
 
         ### Timeout Semantics
 
-        The call will return when a reservation is successful or when
+        The call will return when a lease is successful or when
         `request_timeout` has been reached. If the call returns with a 454
         `Retry Request` response code, this means there were no items in the
         queue and the `request_timeout` was reached. In this case the client
@@ -129,12 +129,12 @@ paths:
                     partition: 0
           headers: {}
       security: []
-  /v1/queue.defer:
+  /v1/queue.retry:
     post:
-      summary: Defer a items to be retried
+      summary: items to be retried
       deprecated: false
       description: >
-        Defer an item to be processed again at a later date/time. Once the
+        Retry an item to be processed again at a later date/time. Once the
         `enqueue_at` time is reached, querator will enqueue this item into the
         specified queue and the `attempted` counter for this item will increment
         by 1. 
@@ -148,7 +148,7 @@ paths:
         If you wish to fail a items such that it is deleted from the queue and
         never offered to another consumer, nor placed into the dead letter
         queue, then call `/queue.complete` instead.
-      operationId: post-v1-queue.defer
+      operationId: post-v1-queue.retry
       tags:
         - Querator V1
       parameters: []
@@ -156,7 +156,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QueueDeferRequest'
+              $ref: '#/components/schemas/QueueRetryRequest'
             example:
               queue_name: queue-name
               partition: 0
@@ -176,7 +176,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QueueDeferResponse'
+                $ref: '#/components/schemas/QueueRetryResponse'
               examples:
                 '1':
                   summary: Success
@@ -466,7 +466,7 @@ paths:
       summary: Clear a queue
       deprecated: false
       description: >-
-        Clears all data from a queue, optionally clears all defer and scheduled
+        Clears all data from a queue, optionally clears all retry and scheduled
         items
       tags:
         - Querator V1
@@ -478,7 +478,7 @@ paths:
               $ref: '#/components/schemas/QueueClearRequest'
             example:
               queue_name: queue-name
-              defer: false
+              retry: false
               scheduled: false
               queue: true
               destructive: true
@@ -665,7 +665,7 @@ components:
         - request_timeout
         - ids
         - partition
-    QueueDeferRequest:
+    QueueRetryRequest:
       type: object
       properties:
         queue_name:
@@ -673,19 +673,19 @@ components:
           description: >-
             The queue name provided when the item was leased. If the
             `queue_name` does not match the original `queue_name` provided when
-            the item was leased, then the defer request will return a non 200
+            the item was leased, then the retry request will return a non 200
             status code.
         partition:
           type: integer
           description: >-
             The partition provided when the item was leased. If the
             `partition` does not match the original `partition` provided when
-            the item was leased, then the defer request will return a non 200
+            the item was leased, then the retry request will return a non 200
             status code.
         items:
           type: array
           items:
-            $ref: '#/components/schemas/QueueDeferItem'
+            $ref: '#/components/schemas/QueueRetryItem'
       required:
         - queue_name
         - partition
@@ -703,10 +703,10 @@ components:
         queue_name:
           type: string
           description: The name of the queue to clear
-        defer:
+        retry:
           type: boolean
           description: >-
-            Indicates the 'defer' queue will be cleared. If true, any items
+            Indicates the 'retry' queue will be cleared. If true, any items
             scheduled to be retried at a future date will be removed.
         scheduled:
           type: boolean
@@ -723,7 +723,7 @@ components:
         destructive:
           type: boolean
           description: >-
-            Indicates the Defer,Scheduled,Queue operations should be destructive
+            Indicates the Retry,Scheduled,Queue operations should be destructive
             in that all data regardless of status will be removed.
 
 
@@ -734,7 +734,7 @@ components:
             knowledge of those items.
       required:
         - queue_name
-        - defer
+        - retry
         - scheduled
         - queue
         - destructive
@@ -765,9 +765,9 @@ components:
           type: boolean
           description: >-
             force indicates the deletion should ignore any current open
-            reservations or items in the queue and delete all data related to
+            leases or items in the queue and delete all data related to
             the queue. In addition, this forcibly cancels all in progress client
-            reservation requests.
+            lease requests.
       required:
         - queue_name
         - force
@@ -824,7 +824,7 @@ components:
         queued:
           type: integer
           format: int64
-        defered:
+        retried:
           type: integer
           format: int64
         scheduled:
@@ -878,7 +878,7 @@ components:
           description: The message that contains details explaining the reason for the code
       required:
         - code
-    QueueDeferResponse:
+    QueueRetryResponse:
       type: object
       properties:
         code:
@@ -1024,7 +1024,7 @@ components:
         attempts:
           type: integer
           description: >-
-            The number of times this item has been deferred or reservation timed
+            The number of times this item has been retried or leased, and timed
             out during processing by a consumer
         lease_deadline:
           type: string
@@ -1049,7 +1049,7 @@ components:
       required:
         - id
         - lease_deadline
-    QueueDeferItem:
+    QueueRetryItem:
       type: object
       properties:
         id:
@@ -1057,7 +1057,7 @@ components:
           description: >-
             The item id provided when the item was leased. If the item id
             provided does not match an item id already in `lease` status, then
-            the defer request will return a non 200 status code.
+            the retry request will return a non 200 status code.
         enqueue_at:
           type: string
           format: date-time
@@ -1070,7 +1070,7 @@ components:
           type: boolean
           description: >-
             Indicates the item is dead, will not be retried regardless of the
-            number of attempts remaining. If set to `true` the defer will  place
+            number of attempts remaining. If set to `true` the retry will  place
             the item in the dead letter queue for the specified queue.
       required:
         - id
@@ -1120,7 +1120,7 @@ components:
         lease_blocked:
           type: integer
           description: >-
-            The number of reservations which are blocked waiting for new item to
+            The number of leases which are blocked waiting for new item to
             enter the queue
         in_flight:
           type: integer
@@ -1178,7 +1178,7 @@ components:
             - account-12345
         lease_timeout:
           type: string
-          description: The default reservation timeout for this queue
+          description: The default lease timeout for this queue
           examples:
             - 60m
         dead_timeout:
@@ -1191,7 +1191,7 @@ components:
         max_attempts:
           type: integer
           description: >-
-            The maximum number of times an item can be defered by a consumer
+            The maximum number of times an item can be retried by a consumer
             before it is placed in the dead letter queue or removed. 
             Infinite attempts if max_attempts is set to '0'
         requested_partitions:
