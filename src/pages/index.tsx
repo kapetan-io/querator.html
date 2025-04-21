@@ -13,7 +13,7 @@ function HomepageHeader() {
         <header className={clsx('hero', styles.heroBanner)}>
             <div className="container">
                 <h1 className="hero__title">{siteConfig.title}</h1>
-                <p className="hero__subtitle">A Reservation based FIFO queue with Exactly Once Delivery semantics</p>
+                <p className="hero__subtitle">A Distributed Durable Execution System & Exactly Once Delivery Queue</p>
                 <div className={styles.buttons}>
                     <Link
                         className="button button--secondary button--lg"
@@ -31,10 +31,11 @@ function QuickStart() {
         <section className={styles.quickStart}>
             <h2>What is Querator?</h2>
             <p>
-                Querator is a highly scalable queue system that uses the reservation pattern to implement
-                "Almost Exactly Once Delivery" (AEOD). The Reservation Pattern ensures that each item is
-                processed exactly once and in the order it was received, making it ideal for distributed
-                systems and complex workflows.
+                Querator is a <b>Distributed Durable Execution</b> System built on top of an <b>Almost Exactly Once Delivery</b>
+                (AEOD) Queue. Querator addresses both <b>Durable Execution</b> and <b>Exactly Once Delivery Queues</b>, which together form a
+                symbiotic relationship that enables developers to build event-driven, highly resilient, distributed,
+                high-performance applications.
+
             </p>
         </section>
     );
@@ -46,13 +47,10 @@ function UseCases() {
         <section >
             <h2>Use Cases</h2>
             <ul>
-                <li>Implement multistep, retry-able workflows</li>
+                <li>Implement multi-step, durable execution functions</li>
                 <li>Implement the Saga Pattern for distributed transactions</li>
-                <li>Use as a lock to gain exclusive access to an item of work</li>
-                <li>Use as a FIFO queue with ordered delivery of messages</li>
-                <li>Run async background tasks that can retry if failed</li>
-                <li>Schedule cron-style jobs to run at a specific time in the future and retry if failed</li>
-                <li>Retryable and reliable webhook delivery with external systems</li>
+                <li>Use it as a FIFO queue with ordered delivery of items</li>
+                <li>Use it as a limit locking system, where items in the queue represent a limited lockable resource</li>
             </ul>
         </section>
         </div>
@@ -64,7 +62,7 @@ export default function Home(): JSX.Element {
     return (
         <Layout
             title={`${siteConfig.title}`}
-            description="A Reservation based FIFO queue with Almost Exactly Once Delivery semantics">
+            description="A Distributed Durable Execution System & Exactly Once Delivery Queue">
             <HomepageHeader />
             <main>
                 <HomepageFeatures />

@@ -1,0 +1,5 @@
+
+run:
+	npx docusaurus start
+
+

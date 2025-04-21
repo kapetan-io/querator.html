@@ -5,7 +5,7 @@ import type * as Redocusaurus from 'redocusaurus';
 
 const config: Config = {
   title: 'Querator.io',
-  tagline: 'Highly Scalable Reservation Queue',
+  tagline: 'A Distributed Durable Execution System & Exactly Once Delivery Queue',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here

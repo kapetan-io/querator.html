@@ -10,11 +10,11 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Reservation Pattern',
+    title: 'Lease Pattern',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-          Uses the reservation pattern to ensure messages are delivered and processed by the consumer.
+          Uses the Lease pattern to ensure messages are delivered and processed by the consumer.
           Built with well known HTTP, Protobuf, JSON Protocols makes adoption easy.
       </>
     ),
