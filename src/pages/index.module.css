@@ -30,6 +30,12 @@
   padding: 2rem;
   margin: 2rem 0;
   border-radius: 8px;
+  text-align: center;
+}
+
+.useCases ul {
+  display: inline-block;
+  text-align: left;
 }
 
 .updates {
