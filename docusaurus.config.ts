@@ -162,8 +162,7 @@ const config: Config = {
         // },
       ],
       //copyright: `Copyright © ${new Date().getFullYear()} Kapetan.io, Inc. Built with Docusaurus.`,
-      copyright: `Do you know how to center a div with CSS? Can you help a poor backend developer fix this site?`+
-          ' <a href="https://github.com/kapetan-io/querator.html/pulls">PLEASE SEND HELP</a>',
+      copyright: `Built with caffeine, desperation, and Docusaurus ☕`,
     },
     prism: {
       theme: prismThemes.github,
