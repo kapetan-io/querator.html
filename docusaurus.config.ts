@@ -92,72 +92,28 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'Querator.io',
-      logo: {
-        alt: 'My Site Logo',
-        src: 'img/logo.svg',
-      },
+      title: 'Querator',
+      hideOnScroll: true,
       items: [
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Documentation',
+          label: 'Docs',
         },
-        {to: '/api', label: 'API Reference', position: 'left'},
-        // {to: '/blog', label: 'Blog', position: 'left'},
+        {to: '/api', label: 'API', position: 'left'},
         {
           href: 'https://github.com/kapetan-io/querator',
           label: 'GitHub',
           position: 'right',
         },
-      ],
-    },
-    footer: {
-      style: 'dark',
-      links: [
         {
-          title: 'Navigation',
-          items: [
-            {
-              label: 'Documentation',
-              to: '/docs/intro',
-            },
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
-          ],
+          to: '/docs/getting-started/quick-start',
+          label: 'Get Started',
+          position: 'right',
+          className: 'navbar-cta-button',
         },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Trello Board',
-              href: 'https://trello.com/b/cey2cB3i/querator',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discord.gg/gQeRm48R',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/kapetan-io/querator',
-            },
-            // {
-            //   label: 'Twitter',
-            //   href: 'https://twitter.com/thrawn01',
-            // },
-          ],
-        },
-        // {
-        //   title: 'More',
-        //   items: [
-        //   ],
-        // },
       ],
-      //copyright: `Copyright © ${new Date().getFullYear()} Kapetan.io, Inc. Built with Docusaurus.`,
-      copyright: `Built with caffeine, desperation, and Docusaurus ☕`,
     },
     prism: {
       theme: prismThemes.github,

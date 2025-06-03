@@ -48,16 +48,16 @@ function ValueProposition() {
             <div className="container">
                 <div className={styles.valueGrid}>
                     <div className={styles.valueItem}>
-                        <h3>For Startups</h3>
-                        <p>Skip the queue complexity. Focus on building your product instead of managing infrastructure.</p>
+                        <h3>Lease Pattern</h3>
+                        <p>Uses the Lease pattern to ensure messages are delivered and processed by the consumer. Built with well known HTTP, Protobuf, JSON Protocols makes adoption easy.</p>
                     </div>
                     <div className={styles.valueItem}>
-                        <h3>For Scale-ups</h3>
-                        <p>From thousands to millions of messages without re-architecture. Querator grows with you.</p>
+                        <h3>Simply Scalable</h3>
+                        <p>Automatically balanced partitions means scale without the need for a complex protocol or clients. Server handles all the complexity of assigning consumers to partitions.</p>
                     </div>
                     <div className={styles.valueItem}>
-                        <h3>For Enterprise</h3>
-                        <p>Production-proven reliability with operational simplicity. No specialized infrastructure teams required.</p>
+                        <h3>Database-Backed</h3>
+                        <p>Disaggregated data layer provides operators with the flexibility to select the desired level of fault tolerance and use of a data store with which they are familiar.</p>
                     </div>
                 </div>
             </div>
@@ -216,6 +216,20 @@ function CallToAction() {
                             View API Docs
                         </Link>
                     </div>
+                    
+                    {/* Integrated Footer Links */}
+                    <div className={styles.ctaFooter}>
+                        <div className={styles.footerLinks}>
+                            <Link to="/docs/intro">Documentation</Link>
+                            <Link to="/api">API Reference</Link>
+                            <Link href="https://github.com/kapetan-io/querator">GitHub</Link>
+                            <Link href="https://discord.gg/gQeRm48R">Discord</Link>
+                            <Link href="https://trello.com/b/cey2cB3i/querator">Trello Board</Link>
+                        </div>
+                        <div className={styles.footerCopyright}>
+                            Built with caffeine, desperation, and Docusaurus ☕
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -227,11 +241,11 @@ export default function Home(): React.ReactElement {
     return (
         <Layout
             title={`${siteConfig.title}`}
-            description="The reliable queue system that scales from prototype to production without the complexity.">
+            description="The reliable queue system that scales from prototype to production without the complexity."
+            wrapperClassName="homepage">
             <HomepageHeader />
             <main>
                 <ValueProposition />
-                <HomepageFeatures />
                 <CodeShowcase />
                 <SocialProof />
                 <QuickStart />
