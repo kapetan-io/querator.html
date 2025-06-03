@@ -13,16 +13,16 @@ function HomepageHeader() {
         <header className={clsx('hero', styles.heroBanner)}>
             <div className="container">
                 <div className={styles.heroContent}>
-                    <h1 className={styles.heroTitle}>Queue. Scale. Deliver.</h1>
+                    <h1 className={styles.heroTitle}>Efficient. Simple. Scalable.</h1>
                     <p className={styles.heroSubtitle}>
-                        The reliable queue system that scales from prototype to production without the complexity.
+                        The efficient queue system that scales from your first message to your billionth.
                         <br />
                         <span className={styles.heroTagline}>All you need is a database.</span>
                     </p>
                     <div className={styles.heroButtons}>
                         <Link
                             className={clsx('button button--primary button--lg', styles.primaryButton)}
-                            to="/docs/getting-started/quick-start">
+                            to="/docs/quick-start">
                             Try Querator
                         </Link>
                         <Link
@@ -57,7 +57,7 @@ function ValueProposition() {
                     </div>
                     <div className={styles.valueItem}>
                         <h3>Database-Backed</h3>
-                        <p>Disaggregated data layer provides operators with the flexibility to select the desired level of fault tolerance and use of a data store with which they are familiar.</p>
+                        <p>Disaggregated data layer provides operators with the flexibility to use a database they have experience, operating and scaling.</p>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@ function CodeShowcase() {
             <div className="container">
                 <div className={styles.showcaseHeader}>
                     <h2>Simple HTTP API</h2>
-                    <p>Works with any programming language. No SDKs required.</p>
+                    <p>Works with any programming language that supports JSON and HTTP.</p>
                 </div>
                 
                 <div className={styles.codeDemo}>
@@ -148,12 +148,8 @@ function SocialProof() {
             <div className="container">
                 <div className={styles.proofGrid}>
                     <div className={styles.proofItem}>
-                        <div className={styles.proofNumber}>5min</div>
-                        <div className={styles.proofLabel}>Setup Time</div>
-                    </div>
-                    <div className={styles.proofItem}>
-                        <div className={styles.proofNumber}>99.9%</div>
-                        <div className={styles.proofLabel}>Reliability</div>
+                        <div className={styles.proofNumber}>High</div>
+                        <div className={styles.proofLabel}>Throughput</div>
                     </div>
                     <div className={styles.proofItem}>
                         <div className={styles.proofNumber}>Millions</div>
@@ -176,20 +172,20 @@ function QuickStart() {
                 <h2>Why Querator?</h2>
                 <div className={styles.quickStartGrid}>
                     <div className={styles.quickStartItem}>
-                        <h3>🚀 Simple Setup</h3>
-                        <p>Just add a database. No complex infrastructure or message brokers required.</p>
+                        <h3>🌐 Open Source</h3>
+                        <p>Open source and community-driven. No vendor lock-in, no licensing costs, full transparency.</p>
                     </div>
                     <div className={styles.quickStartItem}>
-                        <h3>📈 Auto-Scaling</h3>
-                        <p>Handles growth automatically with partition-based scaling. No manual configuration.</p>
+                        <h3>📈 Scale</h3>
+                        <p>Scales to billions of messages a day. Battle-tested at companies processing massive event volumes.</p>
                     </div>
                     <div className={styles.quickStartItem}>
                         <h3>🔒 Reliable Delivery</h3>
                         <p>Almost Exactly Once Delivery ensures your messages are processed reliably.</p>
                     </div>
                     <div className={styles.quickStartItem}>
-                        <h3>🌐 HTTP Everything</h3>
-                        <p>Works with any programming language. Integrate with curl, your favorite HTTP client, or any framework.</p>
+                        <h3>🚀 Easy Integration</h3>
+                        <p>Works with any programming language. Integrate with curl or your favorite HTTP client.</p>
                     </div>
                 </div>
             </div>
@@ -202,18 +198,23 @@ function CallToAction() {
         <section className={styles.callToAction}>
             <div className="container">
                 <div className={styles.ctaContent}>
-                    <h2>Ready to get started?</h2>
-                    <p>Join developers who've simplified their queue infrastructure with Querator.</p>
+                    <h2>Open Source. Open Community.</h2>
+                    <p>Querator is open source and community-driven. Whether you're fixing bugs, adding features, or sharing ideas, every contribution makes queuing better for everyone.</p>
                     <div className={styles.ctaButtons}>
                         <Link
                             className={clsx('button button--primary button--lg', styles.primaryButton)}
-                            to="/docs/getting-started/installation">
-                            Get Started Now
+                            href="https://github.com/kapetan-io/querator">
+                            Contribute on GitHub
                         </Link>
                         <Link
                             className={clsx('button button--secondary button--lg', styles.secondaryButton)}
-                            to="/api">
-                            View API Docs
+                            href="https://discord.gg/gQeRm48R">
+                            Join Our Discord
+                        </Link>
+                        <Link
+                            className={clsx('button button--outline button--lg', styles.githubButton)}
+                            to="/docs/intro">
+                            Read the Docs
                         </Link>
                     </div>
                     

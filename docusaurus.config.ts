@@ -6,7 +6,7 @@ import type * as Redocusaurus from 'redocusaurus';
 const config: Config = {
   title: 'Querator.io',
   tagline: 'The reliable queue system that scales from prototype to production without the complexity',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon-minimal.svg',
 
   // Set the production url of your site here
   url: 'https://querator.io',
@@ -108,7 +108,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          to: '/docs/getting-started/quick-start',
+          to: '/docs/quick-start',
           label: 'Get Started',
           position: 'right',
           className: 'navbar-cta-button',

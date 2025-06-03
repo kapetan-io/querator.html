@@ -139,7 +139,7 @@ fail processing after reaching maximum retry attempts.
 
 ## Installation
 
-See our [Getting Started Guide](/docs/getting-started) for detailed installation and setup instructions.
+See our [Quick Start Guide](/docs/quick-start) for detailed installation and setup instructions.
 
 ## API Reference
 
@@ -148,4 +148,4 @@ For complete API documentation with all endpoints, request/response schemas, and
 ## What's Next?
 
 - **[Architecture Overview](/docs/architecture/intro)** - Learn about Querator's distributed architecture and scaling approach
-- **[Getting Started Guide](/docs/getting-started)** - Step-by-step setup and first implementation
+- **[Quick Start Guide](/docs/quick-start)** - Step-by-step setup and first implementation
