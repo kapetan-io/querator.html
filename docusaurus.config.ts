@@ -5,7 +5,7 @@ import type * as Redocusaurus from 'redocusaurus';
 
 const config: Config = {
   title: 'Querator.io',
-  tagline: 'A Distributed Durable Execution System & Exactly Once Delivery Queue',
+  tagline: 'The reliable queue system that scales from prototype to production without the complexity',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -72,11 +72,6 @@ const config: Config = {
             // Redocusaurus will automatically bundle your spec into a single file during the build
             spec: 'openapi.yaml',
             route: '/api/',
-          },
-          // You can also pass it a OpenAPI spec URL
-          {
-            spec: 'https://redocly.github.io/redoc/openapi.yaml',
-            route: '/openapi/',
           },
         ],
         // Theme Options for modifying how redoc renders them

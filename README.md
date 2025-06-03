@@ -4,10 +4,8 @@ This website is built using [Docusaurus](https://docusaurus.io/), a modern stati
 
 ### Local Development
 ```
-$ npx docusaurus start
+$ npm start
 ```
+
 ### OpenAPI
 **API Reference** or `/api` endpoint uses the local `openapi.yaml` to dynamically generate the HTML documentation.
-
-### Deployment
-???
