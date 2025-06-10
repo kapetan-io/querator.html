@@ -12,47 +12,52 @@ Querator supports multiple deployment options to fit your infrastructure needs.
 
 ### Pre-built Binary
 
-Download the latest release
+Download the latest release via homebrew
 
 ```bash
-TODO: Setup brew install, and go install
+ brew tap kapetan-io/kapetan
+ brew install querator
+```
+Install via golang install
+```bash
+ go install github.com/kapetan-io/querator/cmd/querator@latest
 ```
 
-### Build from Source
+### Build a Release from source
 
 ```bash
-# Clone the repository
-git clone https://github.com/kapetan-io/querator.git
-cd querator
+ git clone https://github.com/kapetan-io/querator.git
+ cd querator
+ git checkout v0.0.1
+ make build
 
-# Build the binary
-go build -o querator ./cmd/querator
-
-# Run Querator
-./querator --help
+ # Run Querator
+ ./querator --version
+ Version: v0.0.1
 ```
 
 ### Docker
 
 ```bash
 # Pull the official image
-docker pull kapetan/querator:latest
+docker pull ghcr.io/kapetan-io/querator:latest
 
 # Run with in-memory storage
-docker run -p 2319:2319 kapetan/querator:latest
+docker run ghcr.io/kapetan-io/querator:latest
 ```
 
 
 ## Step 1: Create Your First Queue
 
 ```bash
-curl -X POST http://localhost:2319/v1/queue.create \
+curl -X POST http://localhost:2319/v1/queues.create \
+  -H "Content-Type: application/json" \
   -d '{
-    "name": "welcome-queue",
+    "queue_name": "welcome-queue",
     "dead_queue": "welcome-queue-dead",
     "reference": "tutorial-user",
     "lease_timeout": "60s",
-    "dead_timeout": "24h",
+    "expire_timeout": "24h",
     "max_attempts": 3,
     "requested_partitions": 1
   }'
@@ -124,7 +129,7 @@ curl -X POST http://localhost:2319/v1/queue.complete \
     "partition": 0,
     "request_timeout": "30s", 
     "ids": [
-      "2m75RTp9PBx69hw1Q7mjoB0F73Q",
+      "2m75RTp9PBx69hw1Q7mjoB0F73Q"
     ]
   }'
 ```

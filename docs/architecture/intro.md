@@ -45,6 +45,8 @@ and shrink based on the number of consumers and available partitions.
 
 ### Distributed Logical Queues
 
+![](logical-queue-diagram.png)
+
 Logical Queues are made up of many partitions, those partitions are
 organized into logical queues depending on the number of consumers registered.
 This system uses Raft leader election to choose a coordinator. The coordinator
