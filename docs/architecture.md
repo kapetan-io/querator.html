@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 4
 ---
 
 # Architecture Overview
@@ -89,29 +89,4 @@ just this requirement, Querator can work with any database that implements the
 storage backend interface. Support for transactions and secondary indexes is
 not required, but can be used to improve Querator's reliability and
 performance.
-
-## Preserving FIFO Order at Scale
-
-Although a queue is implemented as a First-In-First-Out (FIFO) structure, the
-system's order cannot be maintained if there is more than one consumer
-accessing the queue.
-
-Consider a scenario with two consumers accessing a FIFO queue:
-- Consumer 1 retrieves an item
-- Consumer 2 retrieves an item  
-- Consumer 2 finishes processing their item
-- Consumer 1 finishes processing their item
-
-In this situation, the system — which includes the entire setup of client
-producers, Querator, and client consumers — cannot reliably maintain the order
-of item processing when multiple consumers are involved. To ensure ordered
-processing, items which require preservation of order should be placed in the
-same queue, and that queue must have only one partition and one consumer.
-
-Even though Querator queues are designed to deliver items in the order they
-were produced (FIFO), this order is disrupted if multiple consumers process
-items out of sequence. If a user desires a strictly ordered and processed FIFO
-queue, they must create a queue with only one partition and ensure that only
-one consumer processes that queue.
-
 

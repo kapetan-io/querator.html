@@ -50,34 +50,38 @@ docker run ghcr.io/kapetan-io/querator:latest
 ## Step 1: Create Your First Queue
 
 ```bash
+querator create my-queue
+```
+
+This is the equivalent to calling the following
+
+```json
 curl -X POST http://localhost:2319/v1/queues.create \
   -H "Content-Type: application/json" \
   -d '{
-    "queue_name": "welcome-queue",
-    "dead_queue": "welcome-queue-dead",
-    "reference": "tutorial-user",
-    "lease_timeout": "60s",
-    "expire_timeout": "24h",
-    "max_attempts": 3,
+    "queue_name": "my-queue",
+    "lease_timeout": "1m",
+    "expire_timeout": "60m",
     "requested_partitions": 1
   }'
 ```
 ## Step 2: Produce Items to the Queue
 
-Add some work items to your queue:
-
 ```bash
+echo -en "{\"name\": \"Alice\"}" | querator produce my-queue 
+```
+
+The equivalent curl command
+
+```json
 curl -X POST http://localhost:2319/v1/queue.produce \
   -H "Content-Type: application/json" \
   -d '{
-    "queue_name": "welcome-queue",
+    "queue_name": "my-queue",
     "request_timeout": "30s",
     "items": [
       {
-        "encoding": "application/json",
-        "kind": "welcome-email",
-        "reference": "user-123",
-        "utf8": "{\"email\": \"user@example.com\", \"name\": \"Alice\"}"
+        "utf8": "{\"name\": \"Alice\"}"
       }
     ]
   }'
@@ -88,31 +92,35 @@ curl -X POST http://localhost:2319/v1/queue.produce \
 Consumers lease items to gain exclusive processing rights:
 
 ```bash
+querator lease my-queue
+```
+
+```json
 curl -X POST http://localhost:2319/v1/queue.lease \
   -H "Content-Type: application/json" \
   -d '{
-    "queue_name": "welcome-queue",
-    "client_id": "worker-1", 
-    "batch_size": 2,
+    "queue_name": "my-queue",
+    "client_id": "id-20323092", 
+    "batch_size": 1,
     "request_timeout": "30s"
   }'
 ```
 
 **Expected Response:**
+> NOTE: When using application/json encoding, the payload `bytes` are encoded using base64. However, when using
+> application/protobuf encoding (which is recommended for non-trivial operation) the payload `bytes` are not base64
+> encoded. We only use base64 encoding as the payload could be binary data that needs to be preserved in JSON.
 ```json
 {
   "items": [
     {
       "id": "2m75RTp9PBx69hw1Q7mjoB0F73Q",
-      "encoding": "application/json",
-      "kind": "welcome-email", 
-      "reference": "user-123",
       "attempts": 0,
       "lease_deadline": "2024-12-06T15:30:49.366215Z",
       "bytes": "eyJlbWFpbCI6ICJ1c2VyQGV4YW1wbGUuY29tIiwgIm5hbWUiOiAiQWxpY2UifQ=="
     }
   ],
-  "queue_name": "welcome-queue",
+  "queue_name": "my-queue",
   "partition": 0
 }
 ```
@@ -122,10 +130,14 @@ curl -X POST http://localhost:2319/v1/queue.lease \
 After processing items successfully, mark them as complete:
 
 ```bash
+querator complete my-queue --partition=0 2m75RTp9PBx69hw1Q7mjoB0F73Q
+```
+
+```json
 curl -X POST http://localhost:2319/v1/queue.complete \
   -H "Content-Type: application/json" \
   -d '{
-    "queue_name": "welcome-queue",
+    "queue_name": "my-queue",
     "partition": 0,
     "request_timeout": "30s", 
     "ids": [
@@ -136,7 +148,6 @@ curl -X POST http://localhost:2319/v1/queue.complete \
 
 ## Next Steps
 
-- **[Usage Guide](usage.md)** - Advanced usage guide
 - **[Configuration Guide](configuration.md)** - Advanced configuration options
-- **[Architecture Overview](/docs/architecture/intro)** - Understanding Querator's design
+- **[Architecture Overview](architecture.md)** - Understanding Querator's design
 - **[API Reference](/api)** - Complete API documentation

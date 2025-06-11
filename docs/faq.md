@@ -1,24 +1,26 @@
 
 # Frequently Asked Questions
 
-## When does message order matter?
+## How can I guarantee message order?
 
-Order is not always required, but is often expected from queue systems. Even if
-the underlying queue implementation is a FIFO, order cannot be guaranteed if
+Even though Querator is a FIFO queue, order cannot be guaranteed if
 multiple consumers pull from the same queue, as consumers may receive ordered
 items simultaneously, thus losing order.
 
-## Can you give an example where order is critical?
+Consider a scenario with two consumers accessing a FIFO queue:
 
-Consider a FIFO queue containing async jobs that must be completed in order.
-For instance: There is a "send list" job followed by a "delete list" job. In
-this scenario you expect the "send list" job to run and complete first, then
-the "delete list" job deletes the list that was just sent. Allowing these items
-to run out of order would be disastrous.
+- Consumer 1 retrieves an item.
+- Consumer 2 retrieves an item.
+- Consumer 2 finishes processing their item.
+- Consumer 1 finishes processing their item.
 
-## How can I guarantee message order?
+In this situation, the system -— which includes the entire setup of client producers, Querator, and
+client consumers -— cannot reliably maintain the order of item processing when multiple consumers are
+involved. To ensure ordered processing, items which require preservation of order should be placed
+in the same queue, and that queue must have only one partition and one consumer.
 
-For order to be guaranteed, you either need:
-- A keyed synchronization system which only allows a consumer to work one job per key
-- Only allow one consumer for that queue
-
+To guarantee message order, create a queue with a single partition and a single
+consumer that leases items from the queue. You can scale this approach by
+creating multiple queues, each with a single partition and a single consumer.
+An alternative is use a lock service that refuses to process any leased items
+if the lock is currently held by another consumer.

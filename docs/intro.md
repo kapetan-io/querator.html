@@ -7,7 +7,7 @@ sidebar_position: 1
 Querator is a highly scalable, high performance **Almost Exactly Once
 Delivery** (AEOD) Queue system designed to enable developers to build
 event-driven, highly resilient, distributed, high-performance applications. The
-project is inspired by production systems that scaled SaaS companies like
+project is inspired by production systems that we developed to scale SaaS companies like
 Mailgun from millions to billions of events per day.
 
 ## The Problem We're Solving
@@ -147,5 +147,5 @@ For complete API documentation with all endpoints, request/response schemas, and
 
 ## What's Next?
 
-- **[Architecture Overview](/docs/architecture/intro)** - Learn about Querator's distributed architecture and scaling approach
 - **[Quick Start Guide](/docs/quick-start)** - Step-by-step setup and first implementation
+- **[Architecture Overview](architecture.md)** - Learn about Querator's distributed architecture and scaling approach
