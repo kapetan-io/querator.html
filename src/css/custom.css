@@ -70,3 +70,55 @@ h6 {
   line-height: var(--ifm-heading-line-height);
   margin: var(--ifm-heading-margin-top) 0 var(--ifm-heading-margin-bottom) 0;
 }
+
+/* Modern navbar styling */
+.navbar {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar__title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  background: linear-gradient(135deg, #ffffff 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.navbar__item {
+  font-weight: 500;
+}
+
+.navbar__link {
+  color: #e2e8f0;
+  transition: color 0.3s ease;
+}
+
+.navbar__link:hover {
+  color: #8b5cf6;
+}
+
+/* CTA button in navbar */
+.navbar-cta-button {
+  background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+  color: white !important;
+  border-radius: 6px;
+  padding: 0.5rem 1rem !important;
+  margin-left: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
+.navbar-cta-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  color: white !important;
+}
+
+/* Make navbar more transparent on homepage */
+.homepage .navbar {
+  background: rgba(15, 23, 42, 0.6);
+}

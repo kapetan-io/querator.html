@@ -35,8 +35,8 @@ const FeatureList: FeatureItem[] = [
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-          Disaggregated data layer provides operators with the flexibility to select the desired level of fault
-          tolerance and use of a data store with which they are familiar.
+          Disaggregated data layer provides operators with the flexibility to use
+          a database they have experience, operating and scaling.
       </>
     ),
   },
