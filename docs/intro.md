@@ -4,6 +4,10 @@ sidebar_position: 1
 
 # Introduction
 
+:::warning Development Status
+Querator is currently under heavy development and should be considered **alpha release quality**.
+:::
+
 Querator is a highly scalable, high performance **Almost Exactly Once
 Delivery** (AEOD) Queue system designed to enable developers to build
 event-driven, highly resilient, distributed, high-performance applications. The

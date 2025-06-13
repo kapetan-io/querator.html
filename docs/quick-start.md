@@ -4,6 +4,10 @@ sidebar_position: 2
 
 # Quick Start Guide
 
+:::warning Development Status
+Querator is currently under heavy development and should be considered **alpha release quality**.
+:::
+
 This guide will walk you through installation and creating your first queue, producing items, and processing them with Querator.
 
 # Installation
