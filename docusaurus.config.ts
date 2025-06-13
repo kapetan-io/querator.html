@@ -4,8 +4,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 import type * as Redocusaurus from 'redocusaurus';
 
 const config: Config = {
-  title: 'Querator.io',
-  tagline: 'The reliable queue system that scales from prototype to production without the complexity',
+  title: 'Exactly Once Message Queue',
+  tagline: 'Almost exactly once message queue with HTTP API simplicity, and your database',
   favicon: 'img/favicon-minimal.svg',
 
   // Set the production url of your site here
@@ -90,7 +90,7 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/querator-social-card.jpg',
     navbar: {
       title: 'Querator',
       hideOnScroll: true,
