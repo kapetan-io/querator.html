@@ -3,6 +3,19 @@
  * and scoped locally.
  */
 
+/* Force homepage to ignore theme switching - always use dark theme */
+:global(.homepage) {
+  --ifm-background-color: #0f172a !important;
+  --ifm-background-surface-color: #1e293b !important;
+  background-color: #0f172a !important;
+}
+
+:global(.homepage[data-theme='light']) {
+  --ifm-background-color: #0f172a !important;
+  --ifm-background-surface-color: #1e293b !important;
+  background-color: #0f172a !important;
+}
+
 /* Hero Section - Keep original styling */
 .heroBanner {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #3730a3 100%);
@@ -194,6 +207,38 @@
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 0.875rem;
   line-height: 1.6;
+}
+
+/* Custom syntax highlighting classes */
+.codeBlock :global(.json-key) {
+  color: #60a5fa;
+  font-weight: 500;
+}
+
+.codeBlock :global(.json-string) {
+  color: #a7f3d0;
+}
+
+.codeBlock :global(.json-number) {
+  color: #fbbf24;
+}
+
+.codeBlock :global(.curl-command) {
+  color: #f472b6;
+  font-weight: 600;
+}
+
+.codeBlock :global(.curl-flag) {
+  color: #a78bfa;
+  font-weight: 500;
+}
+
+.codeBlock :global(.curl-url) {
+  color: #34d399;
+}
+
+.codeBlock :global(.curl-header) {
+  color: #fbbf24;
 }
 
 /* Inline Features Section - New flowing inline layout */
@@ -611,4 +656,37 @@
   }
 }
 
-/* Dark theme consistently applied regardless of mode setting */
+/* Force all homepage sections to maintain dark theme regardless of global theme setting */
+:global(.homepage) .heroBanner,
+:global(.homepage) .codeShowcase,
+:global(.homepage) .architectureOverview,
+:global(.homepage) .callToAction {
+  background-color: #0f172a !important;
+}
+
+:global(.homepage) .inlineFeatures {
+  background-color: #1e293b !important;
+}
+
+:global(.homepage) .useCases {
+  background-color: #0f172a !important;
+}
+
+/* Override any potential theme-based color inheritance */
+:global(.homepage[data-theme='light']) .heroBanner,
+:global(.homepage[data-theme='light']) .codeShowcase,
+:global(.homepage[data-theme='light']) .architectureOverview,
+:global(.homepage[data-theme='light']) .callToAction {
+  background-color: #0f172a !important;
+  color: white !important;
+}
+
+:global(.homepage[data-theme='light']) .inlineFeatures {
+  background-color: #1e293b !important;
+  color: white !important;
+}
+
+:global(.homepage[data-theme='light']) .useCases {
+  background-color: #0f172a !important;
+  color: white !important;
+}

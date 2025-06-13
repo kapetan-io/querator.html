@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
@@ -15,8 +15,6 @@ function HomepageHeader() {
                 <div className={styles.heroContent}>
                     <h1 className={styles.heroTitle}>Almost Exactly Once Message Queue</h1>
                     <p className={styles.heroSubtitle}>
-                        Kafka-level scale. HTTP API simplicity. Your database.
-                        <br />
                         <span className={styles.heroTagline}>Querator delivers almost-exactly-once message processing at scale using HTTP and a databases of your choice.</span>
                     </p>
                     <div className={styles.heroButtons}>
@@ -67,6 +65,22 @@ function AlmostExactlyOnce() {
 
 function CodeShowcase() {
     const [activeTab, setActiveTab] = React.useState('produce');
+
+    // Simple syntax highlighting function for curl + JSON
+    const highlightCode = (code) => {
+        return code
+            // Highlight JSON strings (in quotes)
+            .replace(/"([^"]*)":/g, '<span class="json-key">"$1":</span>')
+            .replace(/:\s*"([^"]*)"/g, ': <span class="json-string">"$1"</span>')
+            // Highlight numbers
+            .replace(/:\s*(\d+)/g, ': <span class="json-number">$1</span>')
+            // Highlight curl command parts
+            .replace(/(curl)/g, '<span class="curl-command">$1</span>')
+            .replace(/(-[A-Z]+)/g, '<span class="curl-flag">$1</span>')
+            .replace(/(localhost:\d+\/[^\s\\]*)/g, '<span class="curl-url">$1</span>')
+            // Highlight HTTP headers
+            .replace(/(-H\s+"[^"]*")/g, '<span class="curl-header">$1</span>');
+    };
 
     const codeExamples = {
         produce: {
@@ -133,7 +147,11 @@ function CodeShowcase() {
                             <p>{codeExamples[activeTab].description}</p>
                         </div>
                         <pre className={styles.codeBlock}>
-                            <code>{codeExamples[activeTab].code}</code>
+                            <code 
+                                dangerouslySetInnerHTML={{ 
+                                    __html: highlightCode(codeExamples[activeTab].code) 
+                                }}
+                            />
                         </pre>
                     </div>
                 </div>
@@ -310,7 +328,7 @@ export default function Home(): React.ReactElement {
     return (
         <Layout
             title={`${siteConfig.title}`}
-            description="Almost exactly once message queue with Kafka-level scale, HTTP API simplicity, and your database."
+            description="Almost exactly once message queue with HTTP API simplicity, and your database."
             wrapperClassName="homepage">
             <HomepageHeader />
             <main>
