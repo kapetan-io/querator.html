@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
+import Head from "@docusaurus/Head";
 
 import styles from './index.module.css';
 
@@ -13,9 +13,9 @@ function HomepageHeader() {
         <header className={clsx('hero', styles.heroBanner)}>
             <div className="container">
                 <div className={styles.heroContent}>
-                    <h1 className={styles.heroTitle}>Almost Exactly Once Message Queue</h1>
+                    <h1 className={styles.heroTitle}>Exactly Once Message Queue</h1>
                     <p className={styles.heroSubtitle}>
-                        <span className={styles.heroTagline}>Querator delivers almost-exactly-once message processing at scale using HTTP and a databases of your choice.</span>
+                        Almost Exactly Once delivery, backed by a database
                     </p>
                     <div className={styles.heroButtons}>
                         <Link
@@ -164,13 +164,13 @@ function InlineFeatures() {
     return (
         <section className={styles.inlineFeatures}>
             <div className="container">
-                <h2>Why Querator?</h2>
+                <h2>What is Querator?</h2>
                 <div className={styles.featureContent}>
                     <p className={styles.featureParagraph}>
                         Querator combines <span className={styles.highlightBadge}>almost-exactly-once delivery</span> with
-                        the simplicity of HTTP. Messages are <span className={styles.highlightText}>leased, not lost</span> – 
-                        ensuring your data never disappears even when consumers crash. Unlike traditional message brokers that 
-                        require complex configuration and vendor-specific clients, Querator works with 
+                        the simplicity of HTTP. Messages are <span className={styles.highlightText}>leased to consumers</span> –
+                        ensuring your message is never lost even when consumers crash. Unlike many message brokers that
+                        require complex management and esoteric protocols, Querator works with
                         <span className={styles.highlightBadge}>any programming language</span> that supports JSON and HTTP.
                     </p>
                     
@@ -326,6 +326,24 @@ function CallToAction() {
 export default function Home(): React.ReactElement {
     const {siteConfig} = useDocusaurusContext();
     return (
+        <>
+            <Head>
+                <title>Exactly Once Message Queue</title>
+                <meta name="title" content="Exactly Once Message Queue" />
+                <meta name="description" content="Almost exactly once message queue with HTTP API simplicity, and your database" />
+
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://querator.io/" />
+                <meta property="og:title" content="Exactly Once Message Queue" />
+                <meta property="og:description" content="Almost exactly once message queue with HTTP API simplicity, and your database" />
+                <meta property="og:image" content="https://querator.io/img/querator-social-card.jpg" />
+
+                <meta property="twitter:card" content="summary_large_image" />
+                <meta property="twitter:url" content="https://querator.io/" />
+                <meta property="twitter:title" content="Exactly Once Message Queue" />
+                <meta property="twitter:description" content="Almost exactly once message queue with HTTP API simplicity, and your database" />
+                <meta property="twitter:image" content="https://querator.io/img/querator-social-card.jpg" />
+            </Head>
         <Layout
             title={`${siteConfig.title}`}
             description="Almost exactly once message queue with HTTP API simplicity, and your database."
@@ -333,12 +351,13 @@ export default function Home(): React.ReactElement {
             <HomepageHeader />
             <main>
                 <CodeShowcase />
-                <AlmostExactlyOnce />
-                <UseCases />
                 <InlineFeatures />
+                <UseCases />
+                <AlmostExactlyOnce />
                 <ArchitectureOverview />
                 <CallToAction />
             </main>
         </Layout>
+        </>
     );
 }
