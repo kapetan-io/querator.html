@@ -22,7 +22,7 @@ The site structure includes:
 
 The site is configured for dark mode by default and includes:
 - OpenAPI spec integration via Redocusaurus for API documentation
-- Custom branding for Querator.io with links to GitHub, Discord, and Trello
+- Custom branding for Querator.io with links to GitHub, Discord, and the GitHub project board
 - TypeScript configuration throughout
 
 Key configuration files:

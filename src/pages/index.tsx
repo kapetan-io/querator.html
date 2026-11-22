@@ -311,7 +311,7 @@ function CallToAction() {
                             <Link to="/api">API Reference</Link>
                             <Link href="https://github.com/kapetan-io/querator">GitHub</Link>
                             <Link href="https://discord.gg/XwfBdN9wdg">Discord</Link>
-                            <Link href="https://trello.com/b/cey2cB3i/querator">Trello Board</Link>
+                            <Link href="https://github.com/orgs/kapetan-io/projects/2">Project Board</Link>
                         </div>
                         <div className={styles.footerCopyright}>
                             Built with caffeine, desperation, and Docusaurus ☕
