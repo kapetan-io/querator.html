@@ -67,6 +67,7 @@ tags:
       - `queues.list` - List all available queues with pagination
       - `queues.info` - Get detailed information about a specific queue
       - `queues.update` - Update queue configuration
+      - `queues.rebalance` - Give every queue the partitions its requested count and the saved affinities call for
       - `queues.delete` - Delete queues and associated data
       
       **Storage Operations:**
@@ -95,6 +96,7 @@ paths:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -162,6 +164,7 @@ paths:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -218,6 +221,7 @@ paths:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -277,6 +281,7 @@ paths:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -313,6 +318,7 @@ paths:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -349,19 +355,23 @@ paths:
                         lease_timeout: 60m
                         expire_timeout: 24h
                         max_attempts: 20
-                        requested_partitions: 1025
+                        requested_partitions: 100
           headers: {}
       security: []
   /v1/queues.create:
     post:
       summary: Create a queue
       deprecated: false
-      description: Create a new queue with the provided characteristics
+      description: >-
+        Create a new queue with the provided characteristics.
+        `requested_partitions` may be at most 1024; larger requests are
+        rejected with an invalid-option error (HTTP 400).
       operationId: post-v1-queues.create
       tags:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema: &ref_0
@@ -395,15 +405,21 @@ paths:
     post:
       summary: Update a queue
       deprecated: false
-      description: Update the details of a queue.
+      description: >-
+        Update the details of a queue. A field the request leaves out, or sends
+        as `null`, keeps its current value. To remove the dead letter queue send `"dead_queue": ""`,
+        to remove the reference send `"reference": ""`, and to allow unlimited
+        attempts send `"max_attempts": 0`.
       operationId: post-v1-queues.update
       tags:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
-            schema: *ref_0
+            schema:
+              $ref: '#/components/schemas/QueuesUpdateRequest'
             example:
               queue_name: queue-name
               dead_queue: queue-name-dead
@@ -428,24 +444,24 @@ paths:
     post:
       summary: Get Info about a queue
       deprecated: false
-      description: ''
+      description: >-
+        Returns the queue's saved settings next to the partitions it is
+        running. `pending` lists the partitions a rebalance would create and
+        the ones it would mark draining, and is left out when a rebalance would change nothing.
+        `rebalance_refused` gives the reason when a rebalance would be refused.
+        `/queues.list` returns the same fields for each queue it lists.
       operationId: post-v1-queues.info
       tags:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the queue to retrieve info about
-              required:
-                - name
+              $ref: '#/components/schemas/QueuesInfoRequest'
             example:
-              name: queue-name
+              queue_name: queue-name
       responses:
         '200':
           description: ''
@@ -479,6 +495,7 @@ paths:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -511,6 +528,7 @@ paths:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -562,19 +580,19 @@ paths:
       summary: Clear a queue
       deprecated: false
       description: >-
-        Clears all data from a queue, optionally clears all retry and scheduled
-        items
+        Clears items from a queue. Items scheduled for retry are scheduled
+        items, and only the `scheduled` flag removes them.
       tags:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/QueueClearRequest'
             example:
               queue_name: queue-name
-              retry: false
               scheduled: false
               queue: true
               destructive: true
@@ -591,7 +609,7 @@ paths:
                     code: 200
           headers: {}
       security: []
-  /v1/storage/items.list:
+  /v1/storage.items-list:
     post:
       summary: List Items in a Partition
       deprecated: false
@@ -600,6 +618,7 @@ paths:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -613,7 +632,7 @@ paths:
                 $ref: '#/components/schemas/StorageItemsListResponse'
           headers: {}
       security: []
-  /v1/storage/items.import:
+  /v1/storage.items-import:
     post:
       summary: Import Items to a Partition
       deprecated: false
@@ -622,6 +641,7 @@ paths:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -635,7 +655,7 @@ paths:
                 $ref: '#/components/schemas/StorageItemsImportResponse'
           headers: {}
       security: []
-  /v1/storage/items.delete:
+  /v1/storage.items-delete:
     post:
       summary: Delete items from a partition
       deprecated: false
@@ -644,6 +664,7 @@ paths:
         - Querator V1
       parameters: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -661,9 +682,125 @@ paths:
                     code: 200
           headers: {}
       security: []
+  /v1/queues.rebalance:
+    post:
+      summary: Rebalance every queue's partitions
+      deprecated: false
+      description: >-
+        Gives every queue the partitions its requested partition count and
+        the saved affinities call for. A
+        partition a storage backend should no longer hold becomes draining,
+        and new partitions are created on the backends that hold too few.
+        Calling it again finishes a rebalance that stopped part way. Refused
+        with nothing changed when no storage backend has an affinity above 0,
+        or when a storage backend with an affinity above 0 is missing from
+        this instance's config file. The reply counts what
+        was saved and does not say a drain finished. It also lists in
+        `waiting_queues` every queue with one partition that has a draining
+        partition on a storage backend missing from this instance's config
+        file, whether or not this call changed it. Such a queue leases
+        nothing once it reaches that partition, which is when the partitions
+        before it are empty, until the backend is back in the config file.
+        The list is empty when no queue is in that state. A queue with more
+        than one partition and a backend that is in the config file but down
+        are not listed. Needs the
+        `queue.rebalance` permission in the `_system` namespace.
+      operationId: post-v1-queues.rebalance
+      tags:
+        - Querator V1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueuesRebalanceRequest'
+            example: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueuesRebalanceResponse'
+              example:
+                queues_changed: 1
+                partitions_created: 2
+                partitions_draining: 1
+                waiting_queues:
+                  - queue_name: orders
+                    namespace: _system
+                    backend: disk-b
+                    partition: 0
+          headers: {}
+      security: []
+  /v1/storage/backends.update:
+    post:
+      summary: Save a storage backend's affinity
+      deprecated: false
+      description: >-
+        Saves the affinity. Left out, it keeps its saved value. Rejects a
+        negative or non-finite affinity, and a backend with no saved record
+        that is also not in this instance's config file. Never changes where a
+        partition lives. Needs the `backend.update` permission in the `_system`
+        namespace.
+      operationId: post-v1-storage-backends.update
+      tags:
+        - Querator V1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageBackendsUpdateRequest'
+            example:
+              backend: postgres-1
+              affinity: 0
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema: *ref_1
+              examples:
+                '1':
+                  summary: Success
+                  value:
+                    code: 200
+          headers: {}
+      security: []
+  /v1/storage/backends.list:
+    post:
+      summary: List storage backends with their partitions
+      deprecated: false
+      description: >-
+        Lists every storage backend with a saved record. Replies even when a
+        storage backend is down. Takes no filter and does not page. Needs the
+        `backend.list` permission in the `_system` namespace.
+      operationId: post-v1-storage-backends.list
+      tags:
+        - Querator V1
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageBackendsListRequest'
+            example: {}
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageBackendsListResponse'
+          headers: {}
+      security: []
 components:
   schemas:
-    Inspect-Request:
+    InspectRequest:
       type: object
       properties:
         id:
@@ -799,17 +936,14 @@ components:
         queue_name:
           type: string
           description: The name of the queue to clear
-        retry:
-          type: boolean
-          description: >-
-            Indicates the 'retry' queue will be cleared. If true, any items
-            scheduled to be retried at a future date will be removed.
         scheduled:
           type: boolean
           description: >-
             Indicates any 'scheduled' items in the queue will be cleared. If
-            true, any items scheduled to be enqueued at a future date will be
-            removed.
+            true, every item still waiting to be enqueued is removed, including
+            one whose enqueue time has passed but which has not yet moved into
+            the queue, and items scheduled for retry. Only this flag removes
+            scheduled items.
         queue:
           type: boolean
           description: >-
@@ -819,8 +953,9 @@ components:
         destructive:
           type: boolean
           description: >-
-            Indicates the Retry, Scheduled, Queue operations should be destructive
-            in that all data regardless of status will be removed.
+            Indicates the Queue operation should be destructive in that items
+            are removed regardless of lease status. Scheduled items are kept
+            unless Scheduled is also set.
 
             For example, if used with ClearRequest.Queue = true, then ALL items
             in the queue regardless of lease status will be removed. This
@@ -829,7 +964,6 @@ components:
             knowledge of those items.
       required:
         - queue_name
-        - retry
         - scheduled
         - queue
         - destructive
@@ -848,6 +982,84 @@ components:
       required:
         - pivot
         - limit
+    QueuesInfoRequest:
+      type: object
+      properties:
+        queue_name:
+          type: string
+          description: The name of the queue to retrieve info about
+      required:
+        - queue_name
+    QueuesUpdateRequest:
+      type: object
+      properties:
+        queue_name:
+          type: string
+          description: The name of the queue to update
+          examples:
+            - queue-name
+        dead_queue:
+          type: string
+          description: >-
+            The name of the dead letter queue for this queue. Left out, the
+            current dead letter queue is kept. An empty string removes it.
+          examples:
+            - queue-name-dead
+        reference:
+          type: string
+          description: >-
+            A user supplied field which could contain metadata or specify who
+            owns this queue. Left out, the current reference is kept. An empty
+            string removes it.
+          examples:
+            - account-12345
+        lease_timeout:
+          type: string
+          description: >-
+            The default lease timeout for this queue. Left out, empty or '0s', the
+            current lease timeout is kept.
+          examples:
+            - 60m
+        expire_timeout:
+          type: string
+          description: >-
+            How long an item can wait in the queue regardless of attempts before
+            it is moved to the dead letter queue. Left out, empty or '0s', the current
+            expire timeout is kept.
+          examples:
+            - 24h
+        max_attempts:
+          type: integer
+          description: >-
+            The maximum number of times an item can be retried by a consumer
+            before it is placed in the dead letter queue or removed. Left out,
+            the current limit is kept. '0' allows unlimited attempts.
+        requested_partitions:
+          type: integer
+          description: >-
+            The number of partitions this queue has requested. Left out or '0',
+            the current count is kept. Above 1024 is rejected and nothing is
+            saved. `/queues.update` does not add or remove partitions.
+        created_at:
+          type: string
+          format: date-time
+          description: Accepted so a request can carry back what `/queues.info` returned. Ignored.
+        updated_at:
+          type: string
+          format: date-time
+          description: Accepted so a request can carry back what `/queues.info` returned. Ignored.
+        namespace:
+          type: string
+          description: >-
+            Accepted so a request can carry back what `/queues.info` returned.
+            Ignored, but a malformed namespace is refused.
+        partitions:
+          type: array
+          description: Accepted so a request can carry back what `/queues.info` returned. Ignored.
+          items:
+            $ref: '#/components/schemas/PartitionInfo'
+      required:
+        - queue_name
     QueuesDeleteRequest:
       type: object
       properties:
@@ -897,6 +1109,197 @@ components:
         - queue_name
         - partition
         - items
+    QueuesRebalanceRequest:
+      type: object
+      description: Takes no fields.
+    QueuesRebalanceResponse:
+      type: object
+      properties:
+        queues_changed:
+          type: integer
+          format: int32
+          description: How many queues had their partition list changed.
+        partitions_created:
+          type: integer
+          format: int32
+          description: How many new partitions were created across every queue.
+        partitions_draining:
+          type: integer
+          format: int32
+          description: How many partitions this call marked draining across every queue.
+        waiting_queues:
+          type: array
+          description: >-
+            Every queue with one partition that has a draining partition on a storage backend
+            missing from this instance's config file. Sorted by namespace, then queue name, with no cap
+            on its length. Which backends count as missing comes from the config file of the instance that
+            answers. Empty when there is none.
+          items:
+            $ref: '#/components/schemas/WaitingQueue'
+      required:
+        - queues_changed
+        - partitions_created
+        - partitions_draining
+        - waiting_queues
+    WaitingQueue:
+      type: object
+      properties:
+        queue_name:
+          type: string
+          description: The queue's name.
+        namespace:
+          type: string
+          description: The namespace the queue belongs to, as `queues.info` reports it.
+        backend:
+          type: string
+          description: The storage backend missing from the config file that holds the draining partition.
+        partition:
+          type: integer
+          format: int32
+          description: >-
+            The draining partition's number. The lowest-numbered one when the queue has several on
+            missing backends.
+      required:
+        - queue_name
+        - namespace
+        - backend
+        - partition
+    StorageBackendsUpdateRequest:
+      type: object
+      properties:
+        backend:
+          type: string
+          description: The storage backend's name.
+        affinity:
+          type: number
+          format: double
+          minimum: 0
+          description: >-
+            How large a part of every queue's partitions the backend holds.
+            Zero means none. Left out, the saved affinity is kept.
+      required:
+        - backend
+    StorageBackendsListRequest:
+      type: object
+      description: Takes no fields.
+    StorageBackendsListResponse:
+      type: object
+      properties:
+        backends:
+          type: array
+          description: One entry per storage backend with a saved record.
+          items:
+            $ref: '#/components/schemas/StorageBackend'
+      required:
+        - backends
+    StorageBackend:
+      type: object
+      properties:
+        backend:
+          type: string
+          description: The storage backend's name.
+        affinity:
+          type: number
+          format: double
+          description: The saved affinity.
+        configured:
+          type: boolean
+          description: >-
+            False when the backend has a saved record and is not in this
+            instance's config file.
+        safe_to_stop:
+          type: boolean
+          description: >-
+            True only when affinity is 0 and no partition of any queue is left
+            on the backend. A partition Querator cannot read counts as left.
+        partitions:
+          type: array
+          description: Every partition on the backend.
+          items:
+            $ref: '#/components/schemas/BackendPartition'
+        pending:
+          $ref: '#/components/schemas/PendingRebalance'
+      required:
+        - backend
+        - affinity
+        - configured
+        - safe_to_stop
+        - partitions
+        - pending
+    BackendPartition:
+      type: object
+      description: >-
+        One partition on a storage backend. The three counts are left out when
+        Querator cannot read the partition.
+      properties:
+        queue_name:
+          type: string
+          description: The queue the partition belongs to.
+        partition:
+          type: integer
+          format: int32
+          description: The partition number.
+        state:
+          type: string
+          enum:
+            - available
+            - draining
+        unleased:
+          type: integer
+          format: int32
+          description: Items waiting to be leased.
+        leased:
+          type: integer
+          format: int32
+          description: Items leased and not yet completed.
+        scheduled:
+          type: integer
+          format: int32
+          description: Items scheduled and not yet due.
+        failures:
+          type: integer
+          format: int32
+          description: >-
+            The same meaning as `failures` in `/queue.stats`. Above 0 means the
+            partition is failing. 1 when Querator could not load the queue or
+            read its counts.
+      required:
+        - queue_name
+        - partition
+        - state
+        - failures
+    PendingRebalance:
+      type: object
+      description: >-
+        What a rebalance would do to this backend right now. Worked out on each
+        read, never saved.
+      properties:
+        create:
+          type: array
+          description: Partitions a rebalance would create on this backend.
+          items:
+            $ref: '#/components/schemas/QueuePartitions'
+        drain:
+          type: array
+          description: Partitions on this backend a rebalance would mark draining.
+          items:
+            $ref: '#/components/schemas/QueuePartitions'
+      required:
+        - create
+        - drain
+    QueuePartitions:
+      type: object
+      properties:
+        queue_name:
+          type: string
+        partitions:
+          type: array
+          items:
+            type: integer
+            format: int32
+      required:
+        - queue_name
+        - partitions
     StorageItemsDeleteRequest:
       type: object
       properties:
@@ -1012,11 +1415,21 @@ components:
       required:
         - items
     StorageItemsListResponse:
-      type: array
-      items: *ref_2
+      type: object
+      properties:
+        items:
+          type: array
+          items: *ref_2
+      required:
+        - items
     StorageItemsImportResponse:
-      type: array
-      items: *ref_2
+      type: object
+      properties:
+        items:
+          type: array
+          items: *ref_2
+      required:
+        - items
     Reply:
       type: object
       properties:
@@ -1120,6 +1533,7 @@ components:
             out during processing by a consumer
         lease_deadline:
           type: string
+          format: date-time
           description: >-
             The date time that Querator will offer up this item to another
             consumer if the consumer reserving this item has not marked it
@@ -1127,6 +1541,7 @@ components:
             finalize it's work if the timeout date has expired.
         bytes:
           type: string
+          format: byte
           description: >-
             The payload of the item is an array of raw bytes without a
             predetermined character set. 
@@ -1284,9 +1699,30 @@ components:
         requested_partitions:
           type: integer
           description: >-
-            The number of partitions this queue has requested. This might be
-            different than the number of currently active partitions as the
-            system grows or contracts the number of partitions.
+            The number of partitions this queue has requested.
+            `/queues.create` rejects a value greater than 1024 with HTTP 400.
+            Queues stored with more partitions keep working, so responses can
+            report a larger value. `/queues.update` does not add or remove
+            partitions.
+        partitions:
+          type: array
+          description: >-
+            The partitions of this queue and the storage backend which holds
+            each one. Set by Querator; ignored by `/queues.create` and
+            `/queues.update`.
+          items:
+            $ref: '#/components/schemas/PartitionInfo'
+        pending:
+          $ref: '#/components/schemas/QueuePendingRebalance'
+        rebalance_refused:
+          type: string
+          description: >-
+            Why a rebalance would be refused. A backend with affinity above 0
+            missing from the config file, and no backend able to take
+            partitions, use the words `/queues.rebalance` uses. Left out when a
+            rebalance would not be refused. While set, `pending` is left out,
+            so it does not say whether this queue's settings differ. Set by
+            Querator; ignored by `/queues.create` and `/queues.update`.
       required:
         - queue_name
         - requested_partitions
@@ -1297,6 +1733,60 @@ components:
         - reference
         - lease_timeout
         - expire_timeout
+    QueuePendingRebalance:
+      type: object
+      description: >-
+        What a rebalance would change for this queue, worked out on each
+        `/queues.info` and `/queues.list` from the queue's requested partition
+        count and the storage backends' saved affinities. Left out of the
+        queue when a rebalance would change nothing. Set by
+        Querator; ignored by `/queues.create` and `/queues.update`.
+      properties:
+        create:
+          type: array
+          description: >-
+            Partitions a rebalance would create, with the storage backend each
+            would go on.
+          items:
+            $ref: '#/components/schemas/PartitionInfo'
+        drain:
+          type: array
+          description: >-
+            Partitions a rebalance would mark draining, with the storage backend
+            which holds each.
+          items:
+            $ref: '#/components/schemas/PartitionInfo'
+    PartitionInfo:
+      type: object
+      properties:
+        partition:
+          type: integer
+          description: The partition number
+        storage_name:
+          type: string
+          description: >-
+            The name of the storage backend which holds this partition, as
+            given by the `name` of an entry under `partition-storage` in the
+            Querator config. `/queues.create` places a queue's partitions on
+            the storage backends in proportion to each backend's saved
+            affinity (see `/storage/backends.list`), and never on a backend
+            with an affinity of 0. A queue defined in the
+            config file keeps the `storage-name` given there.
+          examples:
+            - badger-0
+        state:
+          type: string
+          enum:
+            - available
+            - draining
+          description: >-
+            A draining partition takes no new items and is removed once empty.
+            Whether a partition is failing is reported by `failures` in
+            `/queue.stats`, not here. Set by Querator; ignored by
+            `/queues.create` and `/queues.update`.
+      required:
+        - partition
+        - storage_name
     StorageItem:
       type: object
       properties:
@@ -1306,16 +1796,24 @@ components:
           type: boolean
         lease_deadline:
           type: string
+          format: date-time
+          description: The deadline when the lease expires and item becomes available again
         dead_deadline:
           type: string
+          format: date-time
+          description: The deadline when this item will be moved to dead letter queue
         expire_deadline:
           type: string
           format: date-time
           description: The deadline when this item expires and moves to dead letter queue
         created_at:
           type: string
+          format: date-time
+          description: The timestamp when this item was created
         updated_at:
           type: string
+          format: date-time
+          description: The timestamp when this item was last updated
         enqueue_at:
           type: string
           format: date-time
@@ -1332,6 +1830,8 @@ components:
           type: string
         payload:
           type: string
+          format: byte
+          description: The payload as base64-encoded bytes
       required:
         - id
         - is_leased
